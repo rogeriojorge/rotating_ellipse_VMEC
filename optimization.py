@@ -27,7 +27,7 @@ os.chdir(this_path)
 ## RUN with: mpirun -n 9 python optimization.py for stage 1 and mpirun -n 1 python optimization.py for stage 2
 run_stage_1 = False
 run_stage_2 = False
-do_Poincare = False
+do_Poincare = True
 ######################
 ### INPUT PARAMETERS
 max_mode = 1
@@ -48,7 +48,7 @@ MAXITER = 600
 nphi=32
 ntheta=32
 nfieldlines = 6
-tmax_fl = 8000
+tmax_fl = 500
 #############################################
 if run_stage_1:
     proc0_print("#### STAGE 1 Optimization ####")
@@ -191,7 +191,7 @@ if do_Poincare:
     proc0_print(f'Defining Poincaré plot functions')
     bs = load(os.path.join(this_path,"biot_savart_opt.json"))
     R_theta0_phi0_array = np.sort(np.sum(vmec.wout.rmnc,axis=0))
-    indices_to_plot = np.array(np.linspace(2,len(R_theta0_phi0_array)-2,nfieldlines),dtype=int)
+    indices_to_plot = np.array(np.linspace(1,len(R_theta0_phi0_array)-1,nfieldlines),dtype=int)
     R0 = R_theta0_phi0_array[indices_to_plot]
     degree = 4
     sc_fieldline = SurfaceClassifier(surf_big, h=0.1, p=2)
