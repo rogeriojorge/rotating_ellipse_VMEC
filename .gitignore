@@ -2,7 +2,17 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+threed*
+parvmecinfo*
+jac_log_*
+input.*_000*
+objective_2*
+wout_*00*
+input.nfp5_opt
+poloidal_plot_*
+VMEC_3Dplot*
+VMECparams*
+VMECsurfaces*
 # C extensions
 *.so
 
