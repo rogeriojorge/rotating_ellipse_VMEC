@@ -11,12 +11,15 @@ from simsopt.solve import least_squares_mpi_solve
 from simsopt.util import MpiPartition, proc0_print
 from vmecPlot2 import main as vmecPlot2_main
 mpi = MpiPartition()
+######################
+## RUN with: mpirun -n 9 python optimization.py
+######################
 ### INPUT PARAMETERS
 max_mode = 1
 target_aspect_ratio = 5
 target_iota = 0.41
 max_nfev = 30
-### END INPUT PARAMETERS
+### STAGE 1 Optimization
 filename = os.path.join(os.path.dirname(__file__), 'input.nfp5')
 vmec = Vmec(filename, mpi=mpi, verbose=False)
 surf = vmec.boundary
@@ -31,17 +34,17 @@ def circular_axis_objective(vmec):
     return np.sum(np.abs(np.concatenate((rc[1:], zs)))**2)
 circular_axis_optimizable = make_optimizable(circular_axis_objective, vmec)
 prob = LeastSquaresProblem.from_tuples([(vmec.aspect, target_aspect_ratio, 1),
-                                        (vmec.mean_iota, target_iota, 1),
-                                        (circular_axis_optimizable.J, 0, 1)])
+                                        (vmec.iota_axis, target_iota, 1),
+                                        (circular_axis_optimizable.J, 0, 1e3)])
 prob.objective()
 proc0_print("Initial aspect ratio:", vmec.aspect())
-proc0_print("Initial iota:", vmec.mean_iota())
+proc0_print("Initial iota on-axis:", vmec.iota_axis())
 proc0_print("Initial circular axis objective:", circular_axis_optimizable.J())
 proc0_print("Total objective before optimization:", prob.objective())
 least_squares_mpi_solve(prob, mpi, grad=True, rel_step=1e-4, abs_step=1e-7, max_nfev=max_nfev)
 prob.objective()
 proc0_print("Final aspect ratio:", vmec.aspect())
-proc0_print("Final iota:", vmec.mean_iota())
+proc0_print("Final iota on-axis:", vmec.iota_axis())
 proc0_print("Final circular axis objective:", circular_axis_optimizable.J())
 proc0_print("Total objective after optimization:", prob.objective())
 mpi.comm_world.Barrier()
