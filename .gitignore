@@ -13,6 +13,10 @@ poloidal_plot_*
 VMEC_3Dplot*
 VMECparams*
 VMECsurfaces*
+*_init.*
+*_opt.*
+*_opt_big.*
+
 # C extensions
 *.so
 
